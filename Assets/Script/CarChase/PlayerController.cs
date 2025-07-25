@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     public void OnMove(InputAction.CallbackContext context)
     {
         direction = context.ReadValue<Vector2>(); // Read the movement direction from the input action
+        anim.SetFloat("Move", Mathf.Abs(direction.x));
     }
 
     public void OnTiled(InputAction.CallbackContext context)
@@ -60,8 +61,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     }
     #endregion
 
-    void FixedUpdate()
+    void Update()
     {
+        if (Time.timeScale <= 0) return;
+
+        AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0);
+
         // Calculate the new velocity based on the direction and current speed
         Vector2 velocity = direction * curSpeed;
 
@@ -71,8 +76,22 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         // Apply the calculated velocity to the Rigidbody2D component
         rb.linearVelocity = velocity;
 
-        if (anim != null)
-            anim.Play("BikeMove");
+        // Check if the player is moving and play the appropriate animation
+        //if (velocity.magnitude > 0.1f)
+        //{
+        //    if (anim != null && curPlayingClips.Length > 0 && curPlayingClips[0].clip.name != "BikeRun")
+        //    {
+        //        anim.Play("BikeRun"); // Play the running animation if the player is moving
+        //    }
+        //}
+        //else
+        //{
+        //    if (anim != null && curPlayingClips.Length > 0 && curPlayingClips[0].clip.name != "BikeIdle")
+        //    {
+        //        anim.Play("BikeIdle"); // Play the idle animation if the player is not moving
+        //    }
+        //}
+
     }
 
     void PressedBreak()
@@ -83,4 +102,5 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         if (anim != null)
             anim.Play("BikeIdle"); // Play the stop animation if the Animator component is available
     }
+
 }

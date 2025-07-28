@@ -52,7 +52,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     public void OnMove(InputAction.CallbackContext context)
     {
         direction = context.ReadValue<Vector2>(); // Read the movement direction from the input action
-        anim.SetFloat("Move", Mathf.Abs(direction.x));
     }
 
     public void OnTiled(InputAction.CallbackContext context)
@@ -73,25 +72,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         // Clamp the speed to the maximum speed
         if (velocity.magnitude > maxSpeed)
             velocity = velocity.normalized * maxSpeed;
-        // Apply the calculated velocity to the Rigidbody2D component
+
         rb.linearVelocity = velocity;
 
-        // Check if the player is moving and play the appropriate animation
-        //if (velocity.magnitude > 0.1f)
-        //{
-        //    if (anim != null && curPlayingClips.Length > 0 && curPlayingClips[0].clip.name != "BikeRun")
-        //    {
-        //        anim.Play("BikeRun"); // Play the running animation if the player is moving
-        //    }
-        //}
-        //else
-        //{
-        //    if (anim != null && curPlayingClips.Length > 0 && curPlayingClips[0].clip.name != "BikeIdle")
-        //    {
-        //        anim.Play("BikeIdle"); // Play the idle animation if the player is not moving
-        //    }
-        //}
+        if (anim != null)
+        {
+            anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
 
+            if (velocity.magnitude > 0.1f)
+                anim.Play("BikeRun"); // Play the running animation if the player is moving
+            else 
+                anim.Play("BikeIdle"); // Play the idle animation if the player is not moving
+        }
     }
 
     void PressedBreak()

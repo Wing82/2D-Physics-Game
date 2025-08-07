@@ -13,8 +13,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     [SerializeField] private float initSpeed = 5.0f; // Initial speed of the player
     [SerializeField] private float maxSpeed = 10.0f; // Maximum speed the player can reach
 
+    [SerializeField] private float acceleration = 0.1f; // Acceleration rate of the player
+
     private float curSpeed; // Current speed of the player
     Vector2 direction; // The direction of the player's movement, initialized to zero
+
+    public bool isGrounded = false;
 
     private void Awake()
     {
@@ -38,6 +42,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component attached to this GameObject
         anim = GetComponent<Animator>(); // Get the Animator component attached to this GameObject
+        gndChk = GetComponent<GroundCheck>(); // Get the GroundCheck component attached to this GameObject
         curSpeed = initSpeed; // Set the current speed to the initial speed
     }
 
@@ -47,11 +52,20 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         if (context.performed)
             PressedBreak();
+        if (context.canceled)
+            curSpeed = initSpeed; // Reset the current speed to the initial speed when the break is released
     }
 
     public void OnMove(InputAction.CallbackContext context)
     {
-        direction = context.ReadValue<Vector2>(); // Read the movement direction from the input action
+        if (context.performed)
+        {
+            direction = context.ReadValue<Vector2>(); // Read the movement direction from the input action
+        }
+        if (context.canceled)
+        {
+            direction = new Vector2(acceleration * Time.deltaTime, 0); 
+        }
     }
 
     public void OnTiled(InputAction.CallbackContext context)
@@ -65,6 +79,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         if (Time.timeScale <= 0) return;
 
         AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0);
+
+        CheckIsGround();
 
         // Calculate the new velocity based on the direction and current speed
         Vector2 velocity = direction * curSpeed;
@@ -89,10 +105,25 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     void PressedBreak()
     {
         curSpeed = 0; // Set the current speed to zero when the break is pressed
-        rb.linearVelocity = Vector2.zero; // Stop the Rigidbody2D by setting its velocity to zero
+        Vector2 velocity = direction * curSpeed;
+        rb.linearVelocity = velocity;
 
         if (anim != null)
             anim.Play("BikeIdle"); // Play the stop animation if the Animator component is available
     }
 
+
+    void CheckIsGround()
+    {
+        if (!isGrounded)
+        {
+            if (rb.linearVelocity.y <= 0) isGrounded = gndChk.isGrounded();
+        }
+        else
+        {
+            isGrounded = gndChk.isGrounded();
+            //anim.SetBool("isGround", isGrounded);
+        }
+
+    }
 }

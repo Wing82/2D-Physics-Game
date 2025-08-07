@@ -16,7 +16,8 @@ GameObject:
   - component: {fileID: 7122670767436086574}
   - component: {fileID: 3928897105968554349}
   - component: {fileID: 3977143817492306447}
-  m_Layer: 0
+  - component: {fileID: 41243972557182858}
+  m_Layer: 6
   m_Name: Bike
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -81,8 +82,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -968701265
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 6864025444850709896, guid: 56473df38df62f140a43c097ec2a8456, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -107,10 +108,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 20
   m_LinearDamping: 0
   m_AngularDamping: 0.05
-  m_GravityScale: 1
+  m_GravityScale: 2
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -182,6 +183,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initSpeed: 5
   maxSpeed: 10
+  acceleration: 0.1
+  isGrounded: 0
 --- !u!95 &7122670767436086574
 Animator:
   serializedVersion: 7
@@ -225,9 +228,9 @@ WheelJoint2D:
     m_DampingRatio: 0.7
     m_Frequency: 2
     m_Angle: 90
-  m_UseMotor: 0
+  m_UseMotor: 1
   m_Motor:
-    m_MotorSpeed: 0
+    m_MotorSpeed: 1
     m_MaximumMotorForce: 10000
 --- !u!235 &3977143817492306447
 WheelJoint2D:
@@ -254,6 +257,22 @@ WheelJoint2D:
   m_Motor:
     m_MotorSpeed: 0
     m_MaximumMotorForce: 10000
+--- !u!114 &41243972557182858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3598114648745096930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e68470c16601507409e09b025b741d20, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  groundCheckRadius: 0.02
+  isGroundLayer:
+    serializedVersion: 2
+    m_Bits: 128
 --- !u!1 &6746900203004038567
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +283,8 @@ GameObject:
   m_Component:
   - component: {fileID: 5447074342393892432}
   - component: {fileID: 7730355288570893531}
-  m_Layer: 0
+  - component: {fileID: 8976616777543296275}
+  m_Layer: 6
   m_Name: Front Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -280,7 +300,7 @@ Transform:
   m_GameObject: {fileID: 6746900203004038567}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.99, y: -0.97, z: 0}
+  m_LocalPosition: {x: 0.99, y: -1.01, z: 0}
   m_LocalScale: {x: 1.4419, y: 1.4419, z: 1.4419}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -313,6 +333,42 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &8976616777543296275
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6746900203004038567}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5
 --- !u!1 &7619558121608460317
 GameObject:
   m_ObjectHideFlags: 0
@@ -323,7 +379,8 @@ GameObject:
   m_Component:
   - component: {fileID: 218202547418059357}
   - component: {fileID: 3617450119665552662}
-  m_Layer: 0
+  - component: {fileID: 7281151123889928271}
+  m_Layer: 6
   m_Name: Rear Wheel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +396,7 @@ Transform:
   m_GameObject: {fileID: 7619558121608460317}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.004, y: -1.024, z: 0}
+  m_LocalPosition: {x: -1.004, y: -1.02, z: 0}
   m_LocalScale: {x: 1.4419, y: 1.4419, z: 1.4419}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -372,3 +429,39 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!58 &7281151123889928271
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619558121608460317}
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 0, y: 0}
+  m_Radius: 0.5

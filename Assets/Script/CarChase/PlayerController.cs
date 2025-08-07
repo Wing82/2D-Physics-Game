@@ -115,15 +115,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
     void CheckIsGround()
     {
-        if (!isGrounded)
-        {
-            if (rb.linearVelocity.y <= 0) isGrounded = gndChk.isGrounded();
-        }
-        else
-        {
-            isGrounded = gndChk.isGrounded();
-            //anim.SetBool("isGround", isGrounded);
-        }
-
+        isGrounded = gndChk.isGrounded();
+        Debug.Log($"Grounded: {isGrounded}");
     }
+
 }

@@ -372,7 +372,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1157537508002664977, guid: 21119afa1ef923e4ebaaf6926f472531, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -1
+      value: -0.58
       objectReference: {fileID: 0}
     - target: {fileID: 1157537508002664977, guid: 21119afa1ef923e4ebaaf6926f472531, type: 3}
       propertyPath: m_LocalPosition.z
@@ -410,9 +410,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bike
       objectReference: {fileID: 0}
-    - target: {fileID: 7619558121608460317, guid: 21119afa1ef923e4ebaaf6926f472531, type: 3}
+    - target: {fileID: 3598114648745096930, guid: 21119afa1ef923e4ebaaf6926f472531, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

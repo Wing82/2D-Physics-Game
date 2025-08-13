@@ -1,12 +1,13 @@
+using System;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 {
-    PlayerInput playerInput; // Reference to the PlayerInput component
+    PlayerInput playerInput; // Reference to the PlayerInput Action component
     Rigidbody2D rb;
-    Animator anim; // Reference to the Animation component for player animations
+    Animator anim; 
     private GroundCheck gndChk;
 
     [Header("Movement Variables")]
@@ -18,6 +19,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     private float curSpeed; // Current speed of the player
     Vector2 direction; // The direction of the player's movement, initialized to zero
 
+    [Header("Tilting Variables")]
+    [SerializeField] private Transform head; // Reference to the head transform for tilting
+    [SerializeField] private Transform tail;
+    [SerializeField] private float bikeTiltSpeed = 100f; // Speed for main bike tilt
+    [SerializeField] private float maxBikeTiltAngle = 15f; // Max rotation for the bike body
+    [SerializeField] private float partTiltAmount = 5f; // Extra tilt for head/tail
+
+    private float bikeTilt;       // Input tilt
+    private float currentBikeTilt; // Current rotation of bike
+
+    [Header("Ground Check")]
     public bool isGrounded = false;
 
     private void Awake()
@@ -35,15 +47,6 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         playerInput.CarChase.Disable(); // Disable the CarChase actions when this script is disabled
         playerInput.CarChase.RemoveCallbacks(this); // Remove this script as the callback for CarChase actions
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>(); // Get the Rigidbody2D component attached to this GameObject
-        anim = GetComponent<Animator>(); // Get the Animator component attached to this GameObject
-        gndChk = GetComponent<GroundCheck>(); // Get the GroundCheck component attached to this GameObject
-        curSpeed = initSpeed; // Set the current speed to the initial speed
     }
 
     #region Input Functions
@@ -70,9 +73,17 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
     public void OnTiled(InputAction.CallbackContext context)
     {
-        direction = context.ReadValue<Vector2>(); // Read the tilting direction from the input action
+        bikeTilt = context.ReadValue<float>(); // Read the tilt input from the input action
     }
     #endregion
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponentInChildren<Animator>();
+        gndChk = GetComponent<GroundCheck>();
+        curSpeed = initSpeed; // Set the current speed to the initial speed
+    }
 
     void Update()
     {
@@ -91,6 +102,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
         rb.linearVelocity = velocity;
 
+        HandleBikeTilt();
+
         if (anim != null)
         {
             anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
@@ -100,6 +113,29 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
             else 
                 anim.Play("BikeIdle"); // Play the idle animation if the player is not moving
         }
+    }
+
+    private void HandleBikeTilt()
+    {
+        // Main bike tilt
+        if (Mathf.Abs(bikeTilt) > 0.01f)
+        {
+            currentBikeTilt += bikeTilt * bikeTiltSpeed * Time.deltaTime;
+        }
+        else
+        {
+            currentBikeTilt = Mathf.MoveTowards(currentBikeTilt, 0, bikeTiltSpeed * Time.deltaTime);
+        }
+
+        currentBikeTilt = Mathf.Clamp(currentBikeTilt, -maxBikeTiltAngle, maxBikeTiltAngle);
+
+        // Apply rotation to whole bike
+        //transform.rotation = Quaternion.Euler(0, 0, currentBikeTilt);
+        rb.MoveRotation(Mathf.LerpAngle(rb.rotation, currentBikeTilt, Time.deltaTime * bikeTiltSpeed));
+
+        // OPTIONAL: small opposite tilts for head/tail for realism
+        if (head != null) head.localRotation = Quaternion.Euler(0, 0, -currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
+        if (tail != null) tail.localRotation = Quaternion.Euler(0, 0, currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
     }
 
     void PressedBreak()
@@ -112,11 +148,9 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
             anim.Play("BikeIdle"); // Play the stop animation if the Animator component is available
     }
 
-
     void CheckIsGround()
     {
         isGrounded = gndChk.isGrounded();
         Debug.Log($"Grounded: {isGrounded}");
     }
-
 }

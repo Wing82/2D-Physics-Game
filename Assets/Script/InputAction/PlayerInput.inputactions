@@ -12,7 +12,7 @@
                     "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 },
                 {
                     "name": "Move",
@@ -27,7 +27,7 @@
                     "name": "Tiled",
                     "type": "Value",
                     "id": "98ec6f67-62b0-41ca-8117-459cd409200a",
-                    "expectedControlType": "Vector2",
+                    "expectedControlType": "Axis",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -79,9 +79,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "2D Vector",
-                    "id": "5cff6c00-1496-4843-87c9-08a9de9fd74d",
-                    "path": "2DVector",
+                    "name": "1D Axis",
+                    "id": "d976b187-02bf-4507-8d90-9e0a27a66f27",
+                    "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -90,9 +90,9 @@
                     "isPartOfComposite": false
                 },
                 {
-                    "name": "up",
-                    "id": "10d41dac-8672-40a1-bd0c-d6b52b272d5e",
-                    "path": "<Keyboard>/w",
+                    "name": "negative",
+                    "id": "901caa77-db68-4490-a82b-f1cc61077eb1",
+                    "path": "<Keyboard>/s",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -101,9 +101,9 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "down",
-                    "id": "2bcebd9c-bab4-441f-b4e1-de507720c306",
-                    "path": "<Keyboard>/s",
+                    "name": "positive",
+                    "id": "f2be110f-d8d1-462d-8edf-670d388f638c",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

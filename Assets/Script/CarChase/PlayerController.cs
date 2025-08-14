@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     [Header("Ground Check")]
     public bool isGrounded = false;
 
+    private bool canMove = false;
+
     private void Awake()
     {
         playerInput = new PlayerInput(); // Create a new instance of PlayerInput
@@ -41,13 +43,26 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         playerInput.CarChase.Enable(); // Enable the CarChase actions
         playerInput.CarChase.SetCallbacks(this); // Set this script as the callback for CarChase actions
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnPlayerMovementToggle += ToggleMovement;
     }
 
     private void OnDisable()
     {
         playerInput.CarChase.Disable(); // Disable the CarChase actions when this script is disabled
         playerInput.CarChase.RemoveCallbacks(this); // Remove this script as the callback for CarChase actions
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnPlayerMovementToggle -= ToggleMovement;
     }
+
+    private void ToggleMovement(bool allow)
+    {
+        canMove = allow;
+        if (allow) rb.linearVelocity = Vector2.zero; // stop immediately
+    }
+
 
     #region Input Functions
     // Implement the interface methods for PlayerInput.ICarChaseActions
@@ -87,7 +102,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
     void Update()
     {
-        if (Time.timeScale <= 0) return;
+        if (!canMove || Time.timeScale <= 0) // Check if the player can move and if the game is not paused
+            return;
 
         AnimatorClipInfo[] curPlayingClips = anim.GetCurrentAnimatorClipInfo(0);
 
@@ -133,7 +149,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         //transform.rotation = Quaternion.Euler(0, 0, currentBikeTilt);
         rb.MoveRotation(Mathf.LerpAngle(rb.rotation, currentBikeTilt, Time.deltaTime * bikeTiltSpeed));
 
-        // OPTIONAL: small opposite tilts for head/tail for realism
+        // Apply rotation to head and tail
         if (head != null) head.localRotation = Quaternion.Euler(0, 0, -currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
         if (tail != null) tail.localRotation = Quaternion.Euler(0, 0, currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
     }

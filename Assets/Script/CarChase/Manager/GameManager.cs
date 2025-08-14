@@ -57,7 +57,7 @@ public class GameManager : MonoBehaviour
     #endregion
 
     #region TIMER
-    private float _timer = 35f; // Default timer value: Seconds
+    [SerializeField] public float _timer = 35f; // Default timer value: Seconds
     public float timer
     {
         get => _timer;
@@ -67,7 +67,8 @@ public class GameManager : MonoBehaviour
             OnTimerValueChanged?.Invoke((int)_timer);
             if (_timer <= 0)
             {
-                GameOver();
+                GameManager.Instance.lives--;
+                
                 return;
             }
             Debug.Log($"{gameObject.name} timer has changed to {_timer}");
@@ -93,7 +94,7 @@ public class GameManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        _timer = 30f; // Reset to default at start
+        //_timer = 30f; // Reset to default at start
         timeIsRunning = false; // Timer is not running at the start
 
         _playerInstance = Instantiate(playerPrefab, new Vector2(-10, -1), Quaternion.identity);
@@ -137,7 +138,7 @@ public class GameManager : MonoBehaviour
     void GameOver()
     {
         Debug.Log("Game Over goes here");
-        SceneManager.LoadScene("GameOver");
+        SceneManager.LoadScene("New");
         _lives = maxLives;
         Destroy(this);
     }

@@ -117,20 +117,18 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""3af7894c-802b-42c9-b3ef-89e3b63e7b00"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": """",
-                    ""id"": ""3ab8cf8e-ad6e-47d4-afbd-3b0498c35c54"",
-                    ""path"": ""<Keyboard>/space"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Break"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
                 {
                     ""name"": """",
                     ""id"": ""b962be12-0f3b-475d-a637-25368b4aeb15"",
@@ -196,6 +194,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Tiled"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3b2ba0bb-bf75-4559-9746-7a7d3943259d"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -207,6 +216,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_CarChase_Break = m_CarChase.FindAction("Break", throwIfNotFound: true);
         m_CarChase_Move = m_CarChase.FindAction("Move", throwIfNotFound: true);
         m_CarChase_Tiled = m_CarChase.FindAction("Tiled", throwIfNotFound: true);
+        m_CarChase_Jump = m_CarChase.FindAction("Jump", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
@@ -290,6 +300,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputAction m_CarChase_Break;
     private readonly InputAction m_CarChase_Move;
     private readonly InputAction m_CarChase_Tiled;
+    private readonly InputAction m_CarChase_Jump;
     /// <summary>
     /// Provides access to input actions defined in input action map "CarChase".
     /// </summary>
@@ -313,6 +324,10 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "CarChase/Tiled".
         /// </summary>
         public InputAction @Tiled => m_Wrapper.m_CarChase_Tiled;
+        /// <summary>
+        /// Provides access to the underlying input action "CarChase/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_CarChase_Jump;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -348,6 +363,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Tiled.started += instance.OnTiled;
             @Tiled.performed += instance.OnTiled;
             @Tiled.canceled += instance.OnTiled;
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
         }
 
         /// <summary>
@@ -368,6 +386,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Tiled.started -= instance.OnTiled;
             @Tiled.performed -= instance.OnTiled;
             @Tiled.canceled -= instance.OnTiled;
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
         }
 
         /// <summary>
@@ -429,5 +450,12 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTiled(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
     }
 }

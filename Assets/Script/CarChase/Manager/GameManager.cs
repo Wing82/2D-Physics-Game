@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
 
         OnPlayerMovementToggle?.Invoke(false); // Disable player movement initially
 
-        StartCoroutine(StartTimerAfterDelay()); // Start the timer after a delay
+        StartCoroutine(StartTimerAfterDelay()); // Start the timer after a delay  
     }
 
     IEnumerator StartTimerAfterDelay()

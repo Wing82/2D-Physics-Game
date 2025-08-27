@@ -19,6 +19,12 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     private float curSpeed; // Current speed of the player
     Vector2 direction; // The direction of the player's movement, initialized to zero
 
+    [Header("Jump Variables")]
+    [SerializeField] private float jumpForce = 10.0f;
+    private bool isJumpPressed = false;
+    private float jumpBufferTime = 0.2f;
+    private float jumpBufferCounter;
+
     [Header("Tilting Variables")]
     [SerializeField] private Transform head; // Reference to the head transform for tilting
     [SerializeField] private Transform tail;
@@ -90,6 +96,14 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         bikeTilt = context.ReadValue<float>(); // Read the tilt input from the input action
     }
+
+    public void OnJump(InputAction.CallbackContext context)
+    {
+        if (context.performed)  // button just pressed
+            jumpBufferCounter = jumpBufferTime;
+        //isJumpPressed = true;
+    }
+
     #endregion
 
     void Start()
@@ -109,6 +123,16 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
         CheckIsGround();
 
+        if (jumpBufferCounter > 0 && isGrounded)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0); // reset vertical velocity
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+            jumpBufferCounter = 0; // consume buffer
+        }
+
+        if (jumpBufferCounter > 0)
+            jumpBufferCounter -= Time.deltaTime;
+
         // Calculate the new velocity based on the direction and current speed
         Vector2 velocity = direction * curSpeed;
 
@@ -116,19 +140,11 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         if (velocity.magnitude > maxSpeed)
             velocity = velocity.normalized * maxSpeed;
 
-        rb.linearVelocity = velocity;
+        rb.linearVelocity = new Vector2(velocity.x, rb.linearVelocity.y); // Preserve existing Y velocity
 
         HandleBikeTilt();
 
-        if (anim != null)
-        {
-            anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
-
-            if (velocity.magnitude > 0.1f)
-                anim.Play("BikeRun"); // Play the running animation if the player is moving
-            else 
-                anim.Play("BikeIdle"); // Play the idle animation if the player is not moving
-        }
+        HandleAnimations();
     }
 
     private void HandleBikeTilt()
@@ -152,6 +168,18 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
         // Apply rotation to head and tail
         if (head != null) head.localRotation = Quaternion.Euler(0, 0, -currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
         if (tail != null) tail.localRotation = Quaternion.Euler(0, 0, currentBikeTilt * partTiltAmount / maxBikeTiltAngle);
+    }
+
+    private void HandleAnimations()
+    {
+        if (anim == null) return;
+
+        anim.SetFloat("Move", Mathf.Abs(rb.linearVelocity.x));
+
+        if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
+            anim.Play("BikeRun");
+        else
+            anim.Play("BikeIdle");
     }
 
     void PressedBreak()

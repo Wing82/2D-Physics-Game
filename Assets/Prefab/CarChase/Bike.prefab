@@ -80,7 +80,7 @@ MonoBehaviour:
   initSpeed: 5
   maxSpeed: 10
   acceleration: 0.1
-  jumpForce: 750
+  jumpForce: 850
   head: {fileID: 2498790495172366349}
   tail: {fileID: 4685401176931077115}
   bikeTiltSpeed: 100

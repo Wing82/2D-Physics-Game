@@ -10,7 +10,7 @@ public class Exit : MonoBehaviour
             // Load the next scene or perform any action when the player collides with the exit
             Debug.Log("Player has exited the level!");
             // Example: Load next scene
-            SceneManager.LoadScene("New");
+            SceneManager.LoadScene("ContinueMenu");
         }
     }
 }

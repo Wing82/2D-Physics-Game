@@ -6,9 +6,11 @@ public enum MenuStates
     SettingsMenu,
     PauseMenu,
     GameOverMenu,
-    InGame,
+    CarChase,
     CreditMenu,
-    InstructionsMenu
+    InstructionsMenu,
+    ContinueMenu,
+    BirdCannon
 }
 
 public class BaseMenu : MonoBehaviour

@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class InGame : BaseMenu
+public class CarChase : BaseMenu
 {
     public TMP_Text timerText;
     public TMP_Text livesText;
@@ -11,7 +11,7 @@ public class InGame : BaseMenu
     public override void Init(MenuController context)
     {
         base.Init(context);
-        state = MenuStates.InGame; // Set the state to InGame
+        state = MenuStates.CarChase; // Set the state to CarChase
 
         GameManager.Instance.OnTimerPrepare += ShowGetReady;
 

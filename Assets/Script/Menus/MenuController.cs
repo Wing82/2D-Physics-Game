@@ -5,7 +5,7 @@ public class MenuController : MonoBehaviour
 {
     public BaseMenu[] allMenus; // Array of all menus in the game
 
-    public MenuStates initState = MenuStates.MainMenu; // Initial state of the menu system
+    public MenuStates initState = MenuStates.CarChase; // Initial state of the menu system
 
     public BaseMenu CurrentState => currentState; // Property to get the current active menu state
     private BaseMenu currentState; // Reference to the currently active menu state

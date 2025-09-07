@@ -33,7 +33,7 @@ public class MenuController : MonoBehaviour
 
         SetActiveState(initState); // Set the initial active state of the menu system
 
-        GameManager.Instance.SetMenuController(this); // Register this MenuController with the GameManager
+        //GameManager.Instance.SetMenuController(this); // Register this MenuController with the GameManager
     }
 
     public void JumpBack()
@@ -63,7 +63,49 @@ public class MenuController : MonoBehaviour
         currentState.gameObject.SetActive(true);
         currentState.EnterState();
 
-        if (!isJumpingBack) menuStack.Push(newState);
+        //if (!isJumpingBack) menuStack.Push(newState);
+
+        //if (!isJumpingBack)
+        //{
+        //    if (menuStack.Count > 0 && menuStack.Contains(newState))
+        //    {
+        //        //remove everything above the new state
+        //        while (menuStack.Peek() != newState)
+        //        {
+        //            menuStack.Pop();
+        //        }
+        //        //we don't need to push the new state because it is already on the stack
+        //        return;
+        //    }
+        //    menuStack.Push(newState);
+        //}
+
+        if (!isJumpingBack)
+        {
+            if (menuStack.Count > 0 && menuStack.Contains(newState))
+            {
+                List<MenuStates> oldStates = new List<MenuStates>();
+                //remove everything above the new state
+                while (menuStack.Peek() != newState)
+                {
+                    oldStates.Add(menuStack.Pop());
+                }
+
+                //pop the new state as we need to re-add it to the top of the stack
+                menuStack.Pop();
+
+                //we need to re-add the old states back to the stack
+                for (int i = oldStates.Count - 1; i >= 0; i--)
+                {
+                    menuStack.Push(oldStates[i]);
+                }
+
+                menuStack.Push(newState);
+                //we don't need to push the new state because it is already on the stack
+                return;
+            }
+            menuStack.Push(newState);
+        }
     }
 
     public void QuitGame()

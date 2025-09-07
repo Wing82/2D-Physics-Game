@@ -3,6 +3,8 @@ using UnityEngine;
 public enum MenuStates
 {
     MainMenu,
+    LevelSelectMenu,
+    CarLevelMenu,
     SettingsMenu,
     PauseMenu,
     GameOverMenu,
@@ -10,7 +12,8 @@ public enum MenuStates
     CreditMenu,
     InstructionsMenu,
     ContinueMenu,
-    BirdCannon
+    BirdCannon,
+    BirdLevelMenu
 }
 
 public class BaseMenu : MonoBehaviour

@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
     [Header("Jump Variables")]
     [SerializeField] private float jumpForce = 10.0f;
-    private bool isJumpPressed = false;
+    //private bool isJumpPressed = false;
     private float jumpBufferTime = 0.2f;
     private float jumpBufferCounter;
 

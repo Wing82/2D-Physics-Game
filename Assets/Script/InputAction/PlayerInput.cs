@@ -98,7 +98,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
-                    ""initialStateCheck"": true
+                    ""initialStateCheck"": false
                 },
                 {
                     ""name"": ""Move"",
@@ -207,6 +207,109 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""BirdCannon"",
+            ""id"": ""3f5cc20c-eada-49b1-86dd-b93f1f9e14bc"",
+            ""actions"": [
+                {
+                    ""name"": ""Rotate"",
+                    ""type"": ""Value"",
+                    ""id"": ""0d4aebbb-a8c6-42ad-b811-7c57628fe1d4"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""b28fff04-3cc7-42a4-9522-20d5f3ebb37f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""9ad3374d-3c47-46e9-a9a1-ed5ba2aabb9e"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""2136e3f9-8ed8-4755-a642-a3b8c895fd82"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""2ffd6c8b-0327-4378-b533-595588de46ef"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""62f28b22-f10f-4ae2-a891-98ff23a63a17"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""12d7e7c2-f11b-49ce-8374-f72c0d0e5557"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Rotate"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a1540867-73f6-48c2-ad3a-67de844aeb98"",
+                    ""path"": """",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1087c2f9-8e80-481e-81c3-a58e47e0cf16"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": []
@@ -217,11 +320,16 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_CarChase_Move = m_CarChase.FindAction("Move", throwIfNotFound: true);
         m_CarChase_Tiled = m_CarChase.FindAction("Tiled", throwIfNotFound: true);
         m_CarChase_Jump = m_CarChase.FindAction("Jump", throwIfNotFound: true);
+        // BirdCannon
+        m_BirdCannon = asset.FindActionMap("BirdCannon", throwIfNotFound: true);
+        m_BirdCannon_Rotate = m_BirdCannon.FindAction("Rotate", throwIfNotFound: true);
+        m_BirdCannon_Fire = m_BirdCannon.FindAction("Fire", throwIfNotFound: true);
     }
 
     ~@PlayerInput()
     {
         UnityEngine.Debug.Assert(!m_CarChase.enabled, "This will cause a leak and performance issues, PlayerInput.CarChase.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_BirdCannon.enabled, "This will cause a leak and performance issues, PlayerInput.BirdCannon.Disable() has not been called.");
     }
 
     /// <summary>
@@ -422,6 +530,113 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="CarChaseActions" /> instance referencing this action map.
     /// </summary>
     public CarChaseActions @CarChase => new CarChaseActions(this);
+
+    // BirdCannon
+    private readonly InputActionMap m_BirdCannon;
+    private List<IBirdCannonActions> m_BirdCannonActionsCallbackInterfaces = new List<IBirdCannonActions>();
+    private readonly InputAction m_BirdCannon_Rotate;
+    private readonly InputAction m_BirdCannon_Fire;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "BirdCannon".
+    /// </summary>
+    public struct BirdCannonActions
+    {
+        private @PlayerInput m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public BirdCannonActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "BirdCannon/Rotate".
+        /// </summary>
+        public InputAction @Rotate => m_Wrapper.m_BirdCannon_Rotate;
+        /// <summary>
+        /// Provides access to the underlying input action "BirdCannon/Fire".
+        /// </summary>
+        public InputAction @Fire => m_Wrapper.m_BirdCannon_Fire;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_BirdCannon; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="BirdCannonActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(BirdCannonActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="BirdCannonActions" />
+        public void AddCallbacks(IBirdCannonActions instance)
+        {
+            if (instance == null || m_Wrapper.m_BirdCannonActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_BirdCannonActionsCallbackInterfaces.Add(instance);
+            @Rotate.started += instance.OnRotate;
+            @Rotate.performed += instance.OnRotate;
+            @Rotate.canceled += instance.OnRotate;
+            @Fire.started += instance.OnFire;
+            @Fire.performed += instance.OnFire;
+            @Fire.canceled += instance.OnFire;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="BirdCannonActions" />
+        private void UnregisterCallbacks(IBirdCannonActions instance)
+        {
+            @Rotate.started -= instance.OnRotate;
+            @Rotate.performed -= instance.OnRotate;
+            @Rotate.canceled -= instance.OnRotate;
+            @Fire.started -= instance.OnFire;
+            @Fire.performed -= instance.OnFire;
+            @Fire.canceled -= instance.OnFire;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="BirdCannonActions.UnregisterCallbacks(IBirdCannonActions)" />.
+        /// </summary>
+        /// <seealso cref="BirdCannonActions.UnregisterCallbacks(IBirdCannonActions)" />
+        public void RemoveCallbacks(IBirdCannonActions instance)
+        {
+            if (m_Wrapper.m_BirdCannonActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="BirdCannonActions.AddCallbacks(IBirdCannonActions)" />
+        /// <seealso cref="BirdCannonActions.RemoveCallbacks(IBirdCannonActions)" />
+        /// <seealso cref="BirdCannonActions.UnregisterCallbacks(IBirdCannonActions)" />
+        public void SetCallbacks(IBirdCannonActions instance)
+        {
+            foreach (var item in m_Wrapper.m_BirdCannonActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_BirdCannonActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="BirdCannonActions" /> instance referencing this action map.
+    /// </summary>
+    public BirdCannonActions @BirdCannon => new BirdCannonActions(this);
     /// <summary>
     /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "CarChase" which allows adding and removing callbacks.
     /// </summary>
@@ -457,5 +672,27 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnJump(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "BirdCannon" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="BirdCannonActions.AddCallbacks(IBirdCannonActions)" />
+    /// <seealso cref="BirdCannonActions.RemoveCallbacks(IBirdCannonActions)" />
+    public interface IBirdCannonActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Rotate" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRotate(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Fire" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnFire(InputAction.CallbackContext context);
     }
 }

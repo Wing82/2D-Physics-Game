@@ -14,7 +14,7 @@ public class InstructionMenu : BaseMenu
         base.Init(context);
         state = MenuStates.InstructionsMenu;
 
-        if (mainMenuBtn) mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("TitleScreen"));
+        if (mainMenuBtn) mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("StartScreen"));
         if (settingsBtn) settingsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.SettingsMenu));
         if (creditsBtn) creditsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.CreditMenu));
         if (backBtn) backBtn.onClick.AddListener(JumpBack);

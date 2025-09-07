@@ -17,7 +17,7 @@ public class PauseMenu : BaseMenu
         //Time.timeScale = 0f; // Pause the game
 
         if (resumeBtn) resumeBtn.onClick.AddListener(() => SetNextMenu(MenuStates.BirdCannon));
-        if (mainMenuBtn) mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("TitleScreen"));
+        if (mainMenuBtn) mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("StartScreen"));
         if (settingsBtn) settingsBtn.onClick.AddListener(() => SetNextMenu(MenuStates.SettingsMenu));
         if (quitBtn) quitBtn.onClick.AddListener(QuitGame);
     }

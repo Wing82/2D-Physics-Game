@@ -2305,7 +2305,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   allMenus: []
-  initState: 4
+  initState: 6
 --- !u!1 &1032789424
 GameObject:
   m_ObjectHideFlags: 0

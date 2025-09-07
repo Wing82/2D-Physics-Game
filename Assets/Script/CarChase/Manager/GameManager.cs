@@ -24,12 +24,13 @@ public class GameManager : MonoBehaviour
     #region MENU CONTROLLER INFO
     private MenuController currentMenuController;
 
+    // Replace the incorrect SetMenuController method with a valid implementation
     public void SetMenuController(MenuController newMenuController) => currentMenuController = newMenuController;
-    #endregion
+#endregion
 
     #region GAME PROPERTIES
-    #region LIVES
-    [SerializeField] private int maxLives = 5;
+#region LIVES
+[SerializeField] private int maxLives = 5;
     private int _lives = 3;
 
     public int lives
@@ -74,6 +75,8 @@ public class GameManager : MonoBehaviour
             Debug.Log($"{gameObject.name} timer has changed to {_timer}");
         }
     }
+
+    public Action OnGameReset { get; internal set; }
     #endregion
     #endregion
 

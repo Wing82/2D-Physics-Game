@@ -142,6 +142,8 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
 
         rb.linearVelocity = new Vector2(velocity.x, rb.linearVelocity.y); // Preserve existing Y velocity
 
+        AddGravity();
+
         HandleBikeTilt();
 
         HandleAnimations();
@@ -196,5 +198,10 @@ public class PlayerController : MonoBehaviour, PlayerInput.ICarChaseActions
     {
         isGrounded = gndChk.isGrounded();
         Debug.Log($"Grounded: {isGrounded}");
+    }
+
+    void AddGravity()
+    {
+        
     }
 }

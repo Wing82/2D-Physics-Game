@@ -7,6 +7,8 @@ TagManager:
   - Exit
   - SkyCollision
   - Wheel
+  - Box
+  - Ball
   layers:
   - Default
   - TransparentFX

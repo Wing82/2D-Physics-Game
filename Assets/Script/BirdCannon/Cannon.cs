@@ -12,17 +12,14 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
     public Transform rotatePivot;
 
     [Header("Firing Settings")]
-    public GameObject ballPrefab;
+    public Ball ballPrefab;
     public Transform firePoint;
     public float minPower = 10f;
     public float maxPower = 50f;
     public float powerRate = 20f;
-    public float currentPower;
+    public float currentPower = 0f;
 
     private bool _isFiring = false;
-    //private bool _isCoolingDown = false;
-    //private float _coolDownTime = 2f;
-    //private float _coolDownTimer = 0f;
 
     private Vector2 rotateInput; // store the input vector
 
@@ -103,11 +100,10 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
     {
         if (ballPrefab && firePoint)
         {
-            GameObject ball = Instantiate(ballPrefab, firePoint.position, firePoint.rotation);
-            rb = ball.GetComponent<Rigidbody2D>();
-            rb.AddForce(firePoint.right * currentPower, ForceMode2D.Impulse);
+            Ball ball = Instantiate(ballPrefab, firePoint.position, firePoint.rotation);  
+            ball.direction = firePoint.right; // Set the ball's direction to the fire point's right vector
+            ball.speed = currentPower; // Set the ball's speed to the current power
+            Debug.Log("Fired ball with power: " + currentPower);
         }
-    }
-
-    
+    } 
 }

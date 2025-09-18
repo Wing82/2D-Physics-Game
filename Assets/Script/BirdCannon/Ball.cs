@@ -2,40 +2,71 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
-    public Rigidbody2D rb;
-
     private int _x = 1;
     private int _y = 1;
     public  int X => _x;
     public int Y => _y;
 
-    public float speed = 5f;
-    public Vector2 direction = Vector2.right;
-    public float lifeTime = 5f;
-
-    public float gravity = 9.81f;
-    public float velocity = 0f;
+    [Header("Launch Settings")]
     public float initVelocity = 5f;
+    public Vector2 direction = Vector2.right;
 
-    void Awake()
-    {
-        rb = GetComponent<Rigidbody2D>();
-    }
+    [Header("Gravity Control")]
+    public float gravityThresholdY = 3f; // height where gravity starts
+    public float gravity = -9.81f;       // gravity force
+
+    private bool gravityEnabled = false;
+    private Vector2 velocity;
+    private Vector2 position;
+
+    [Header("Lifetime")]
+    public float lifeTime = 5f;   // seconds before destruction
+    private float timer = 0f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        rb.linearVelocity = Vector2.zero;
+        position = transform.position;
+        velocity = direction.normalized * initVelocity;
     }
 
     // Update is called once per frame
     void Update()
     {
-        direction = direction.normalized;
-        rb.linearVelocity = direction * speed * gravity;
-        rb.linearVelocity = rb.linearVelocity + Vector2.right;
-        rb.AddForce(rb.linearVelocity, ForceMode2D.Impulse);
+        float dt = Time.deltaTime;
 
-        Debug.Log("Ball Direction: " + direction);
+        timer += dt;
+        if (timer >= lifeTime)
+        {
+            Destroy(gameObject);
+            return; // stop updating after destroy
+        }
+
+        if (!gravityEnabled && position.y <= gravityThresholdY)
+        {
+            gravityEnabled = true;
+        }
+
+        if(gravityEnabled)
+        {
+            velocity.y += gravity * dt;
+        }
+
+        position += velocity * dt;
+
+        transform.position = position;
+
+        if (transform.position.y <= -3.5f)
+        {
+            //transform.position = new Vector2(transform.position.x, -3.5f);
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            Debug.Log("Ball hit the floor and will be destroyed.");
+        }
     }
 }

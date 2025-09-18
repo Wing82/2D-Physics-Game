@@ -13,4 +13,9 @@ public class PlayArea : MonoBehaviour
     {
         
     }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log("PlayArea collided with: " + collision.gameObject.name);
+    }
 }

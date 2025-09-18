@@ -9,6 +9,7 @@ TagManager:
   - Wheel
   - Box
   - Ball
+  - Floor
   layers:
   - Default
   - TransparentFX

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,10 +7,27 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
     PlayerInput playerInput; // Reference to the PlayerInput Action component
     Rigidbody2D rb;
 
+    private static Cannon _instance;
+    public static Cannon Instance => _instance;
+
     [Header("Cannon Settings")]
     public float rotationSpeed = 90f;
     public float angle = 45f;
     public Transform rotatePivot;
+
+    public event Action<float> OnAngleChanged;
+
+    public float Angle
+    {
+        get => angle;
+        set
+        {
+            angle = value;
+            OnAngleChanged?.Invoke(angle);
+        }
+    }
+    
+    
 
     [Header("Firing Settings")]
     public Ball ballPrefab;
@@ -19,6 +37,19 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
     public float powerRate = 20f;
     public float currentPower = 0f;
 
+    public event Action<float> OnPowerChanged;
+
+    public float CurrentPower
+    { 
+        get => currentPower;
+        set
+        {
+            currentPower = value;
+            OnPowerChanged?.Invoke(currentPower);
+        }
+    }
+
+
     private bool _isFiring = false;
 
     private Vector2 rotateInput; // store the input vector
@@ -26,6 +57,14 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
 
     private void Awake()
     {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            _instance = this;
+        }
         playerInput = new PlayerInput();
         currentPower = minPower;
     }
@@ -102,7 +141,7 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
         {
             Ball ball = Instantiate(ballPrefab, firePoint.position, firePoint.rotation);  
             ball.direction = firePoint.right; // Set the ball's direction to the fire point's right vector
-            ball.speed = currentPower; // Set the ball's speed to the current power
+            ball.initVelocity = currentPower; // Set the ball's speed to the current power
             Debug.Log("Fired ball with power: " + currentPower);
         }
     } 

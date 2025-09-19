@@ -5,7 +5,6 @@ using UnityEngine.InputSystem;
 public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
 {
     PlayerInput playerInput; // Reference to the PlayerInput Action component
-    Rigidbody2D rb;
 
     private static Cannon _instance;
     public static Cannon Instance => _instance;
@@ -51,8 +50,10 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
 
 
     [Header("Score Settings")]
-    public event Action<int> OnScoreValueChanged;
     public int score = 0;
+
+    public event Action<int> OnScoreValueChanged;
+
     public int Score
     {
         get => score;

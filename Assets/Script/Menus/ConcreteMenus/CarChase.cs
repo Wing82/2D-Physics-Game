@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CarChase : BaseMenu
 {
@@ -47,6 +48,7 @@ public class CarChase : BaseMenu
         {
             // Timer has reached zero, handle game over logic
             timerText.text = "Time's Up!";
+            SceneManager.LoadScene("GameOverScreen"); // Load Game Over scene
             return;
         }
     }

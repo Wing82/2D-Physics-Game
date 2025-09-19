@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Ball : MonoBehaviour
 {
@@ -23,6 +24,10 @@ public class Ball : MonoBehaviour
     public float lifeTime = 5f;   // seconds before destruction
     private float timer = 0f;
 
+    [Header("Collision")]
+    public float collisionRadius = 0.2f; // how big the "hitbox" is
+    public LayerMask collisionLayers;    // choose which layers it collides with
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -35,6 +40,7 @@ public class Ball : MonoBehaviour
     {
         float dt = Time.deltaTime;
 
+        // Lifetime
         timer += dt;
         if (timer >= lifeTime)
         {
@@ -42,6 +48,7 @@ public class Ball : MonoBehaviour
             return; // stop updating after destroy
         }
 
+        // Gravity enable
         if (!gravityEnabled && position.y <= gravityThresholdY)
         {
             gravityEnabled = true;
@@ -52,31 +59,32 @@ public class Ball : MonoBehaviour
             velocity.y += gravity * dt;
         }
 
+        // Movement
         position += velocity * dt;
-
         transform.position = position;
 
-        if (transform.position.y <= -3.5f)
+        CheckCollision();
+
+        if (Cannon.Instance.Score == 70)
         {
-            //transform.position = new Vector2(transform.position.x, -3.5f);
+            SceneManager.LoadScene("GameOverScreen");
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void CheckCollision()
     {
-        if (collision.gameObject.CompareTag("Floor"))
-        {
-            Destroy(gameObject);
-            Debug.Log("Ball hit the floor and will be destroyed.");
-        }
-    }
+        // Cast a small circle around the ball
+        Collider2D hit = Physics2D.OverlapCircle(transform.position, collisionRadius, collisionLayers);
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Floor"))
+        if (hit != null)
         {
-            Destroy(gameObject);
-            Debug.Log("Ball hit the floor and will be destroyed.");
+            Debug.Log("Ball hit: " + hit.gameObject.name);
+
+            if (hit.CompareTag("Floor"))
+            {
+                Debug.Log("Ball collided with the Floor");
+                Destroy(gameObject);
+            }
         }
     }
 }

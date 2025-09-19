@@ -72,6 +72,8 @@ public class GameManager : MonoBehaviour
                 
                 return;
             }
+
+
             Debug.Log($"{gameObject.name} timer has changed to {_timer}");
         }
     }

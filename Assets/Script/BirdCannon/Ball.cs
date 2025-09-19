@@ -62,10 +62,20 @@ public class Ball : MonoBehaviour
         }
     }
 
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Floor"))
+        {
+            Destroy(gameObject);
+            Debug.Log("Ball hit the floor and will be destroyed.");
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Floor"))
         {
+            Destroy(gameObject);
             Debug.Log("Ball hit the floor and will be destroyed.");
         }
     }

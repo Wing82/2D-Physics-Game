@@ -18,7 +18,9 @@ public class Box : MonoBehaviour
     {
         if (collision.CompareTag("Ball"))
         {
+           Cannon.Instance.Score += 10;
             Destroy(gameObject);
+            Destroy(collision.gameObject);
         }
     }
 }

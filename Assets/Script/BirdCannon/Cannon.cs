@@ -50,6 +50,19 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
     }
 
 
+    [Header("Score Settings")]
+    public event Action<int> OnScoreValueChanged;
+    public int score = 0;
+    public int Score
+    {
+        get => score;
+        set
+        {
+            score = value;
+            OnScoreValueChanged?.Invoke(score);
+        }
+    }
+
     private bool _isFiring = false;
 
     private Vector2 rotateInput; // store the input vector
@@ -113,12 +126,12 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
 
         if (!_isFiring)
         {
-            angle += rotateAmount * rotationSpeed * Time.deltaTime;
-            angle = Mathf.Clamp(angle, 20f, 60f); // Clamp the angle
+            Angle += rotateAmount * rotationSpeed * Time.deltaTime;
+            Angle = Mathf.Clamp(angle, 20f, 60f); // Clamp the angle
 
             rotatePivot.rotation = Quaternion.Euler(0, 0, angle);
 
-            Debug.Log("Cannon Angle: " + angle);
+            Debug.Log("Cannon Angle: " + Angle);
         }
     }
 
@@ -128,10 +141,10 @@ public class Cannon : MonoBehaviour, PlayerInput.IBirdCannonActions
         {
             float powerAdjust = rotateInput.x; // Get the horizontal input for power adjustment
 
-            currentPower += powerAdjust * powerRate * Time.deltaTime;
-            currentPower = Mathf.Clamp(currentPower, minPower, maxPower);
+            CurrentPower += powerAdjust * powerRate * Time.deltaTime;
+            CurrentPower = Mathf.Clamp(currentPower, minPower, maxPower);
 
-            Debug.Log("Current Power: " + currentPower);
+            Debug.Log("Current Power: " + CurrentPower);
         }
     }
 

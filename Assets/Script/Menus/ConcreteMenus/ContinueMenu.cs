@@ -13,7 +13,7 @@ public class ContinueMenu : BaseMenu
         base.Init(context);
         state = MenuStates.ContinueMenu;
 
-        if (continueBtn) continueBtn.onClick.AddListener(() => SetNextMenu(MenuStates.BirdCannon));
+        if (continueBtn) continueBtn.onClick.AddListener(() => SceneManager.LoadScene("BirdTitleScreen"));
         if (mainMenuBtn) mainMenuBtn.onClick.AddListener(() => SceneManager.LoadScene("StartScreen"));
         if (quitBtn) quitBtn.onClick.AddListener(QuitGame);
     }

@@ -14,7 +14,7 @@ public class LevelSelectMenu : BaseMenu
         state = MenuStates.LevelSelectMenu;
 
         if (carMainMenu) carMainMenu.onClick.AddListener(() => SceneManager.LoadScene("CarTitleScreen"));
-        if (birdMainMenu) birdMainMenu.onClick.AddListener(() =>SceneManager.LoadScene("BirdCannon"));
+        if (birdMainMenu) birdMainMenu.onClick.AddListener(() =>SceneManager.LoadScene("BirdTitleScreen"));
         if (backBtn) backBtn.onClick.AddListener(JumpBack);
     }
 }
